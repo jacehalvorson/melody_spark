@@ -1,5 +1,4 @@
 import { StyleSheet, View, Text } from 'react-native';
-import { GuitarString, Note } from '../music';
 
 const styles = StyleSheet.create({
    guitar: {
@@ -9,15 +8,15 @@ const styles = StyleSheet.create({
       justifyContent: 'flex-start',
 
       width: '75%',
-      height: 500,
+      height: '80%',
       backgroundColor: '#000000',
    },
 
    fret: {
       width: '100%',
-      height: '10%',
+      height: 50,
       borderBottomWidth: 3,
-      borderColor: '#aaa9ad',
+      borderColor: '#929194',
       borderRadius: 2,
 
       display: 'flex',
@@ -26,10 +25,22 @@ const styles = StyleSheet.create({
    },
 
    dot: {
-      width: 10,
-      height: 10,
-      borderRadius: 5,
+      width: 12,
+      height: 12,
+      borderRadius: 6,
       backgroundColor: '#ffffff',
+   },
+
+   stringWrapper: {
+      position: 'absolute',
+      flex: 1,
+
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      width: '85%',
+      height: '100%',
    },
 });
 
@@ -37,7 +48,10 @@ function String( props: { width: number } ) {
    let stringStyles = {
       width: props.width,
       height: '100%',
-      backgroundColor: ( props.width > 7 ) ? '#e1c16e' : '#aaa9ad',
+      backgroundColor: ( props.width > 3 ) ? '#bfa561' : '#aaa9ad',
+
+      borderWidth: 1,
+      borderColor: '#000000',
    }
 
    return (
@@ -67,19 +81,21 @@ function Dot( ) {
 export default function Guitar( ) {   
    return (
       <View style={styles.guitar}>
-         {
-            [1, 2, 3, 4, 5, 6, 7, 8, 9].map( ( index ) => {
+         {/* Fretboard */}
+         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].map( ( fret ) => {
+            return (
+               <Fret index={fret} />
+            );
+         })}
+
+         {/* Strings */}
+         <View style={styles.stringWrapper}>
+            {[1, 2, 3, 4, 5, 6].map( ( stringNumber ) => {
                return (
-                  <Fret index={index} />
-               );
-            })
-         }
-         {/* <String width={13} /> 
-         <String width={11} />
-         <String width={9} />
-         <String width={5} />
-         <String width={4} />
-         <String width={3} /> */}
+                  <String width={ 8 } />
+               )
+            })}
+         </View>
       </View>
    );
 }

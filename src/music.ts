@@ -136,6 +136,10 @@ export class Note {
       return this.symbol;
    }
 
+   public toString( ): string {
+      return `Note: ${NoteSymbol[ this.symbol ]} at Fret ${this.fret} on string ${GuitarString[this.string]} (index ${this.index})`;
+   }
+
    // Returns a list of notes that are a given scale degree of this note.
    // Ex. The 5th of an open E string is a B, so this would return a list
    // of every B on the fretboard.
@@ -168,8 +172,17 @@ export class Note {
       return scaleDegreeNotes;
    }
 
-   public toString( ): string {
-      return `Note: ${NoteSymbol[ this.symbol ]} at Fret ${this.fret} on string ${GuitarString[this.string]} (index ${this.index})`;
+   // Returns a list of notes that are a given chord of this note.
+   // Ex. An E major chord (scale degrees 1, 3, and 5) finds all
+   // E, G#, and B notes on the fretboard.
+   public getChordNotes( chord: number[] ): Note[] {
+      let chordNotes: Note[] = [];
+
+      chord.forEach( scaleDegree => {
+         chordNotes = chordNotes.concat( this.getScaleDegreeNotes( scaleDegree ) );
+      });
+
+      return chordNotes;
    }
 
    private string: GuitarString;
