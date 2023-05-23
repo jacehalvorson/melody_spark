@@ -1,13 +1,18 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import Guitar from './src/components/guitar';
+import { GuitarString, Note } from './src/music';
 
 export default function App() {
+  const note = new Note( GuitarString.D, 7 ); 
+
   return (
     <View style={styles.container}>
       <Text>Fretboard:</Text>
       <Guitar />
-      <StatusBar style="auto" />
+      <Text>
+        {note.getScaleDegreeNotes( 3 ).map( note => note.toString() ).join( '\n' )}
+      </Text>
     </View>
   );
 }
