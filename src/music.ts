@@ -1,6 +1,6 @@
 /* ---------------------- Types ------------------------ */
-const numSymbols = 12; // Number of symbols in an octave (12 notes in a chromatic scale)
-enum NoteSymbol {
+export const numSymbols = 12; // Number of symbols in an octave (12 notes in a chromatic scale)
+export enum NoteSymbol {
    E, // 0
    F,
    FSharp,
