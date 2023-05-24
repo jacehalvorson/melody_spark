@@ -60,8 +60,6 @@ function String( props: { width: number } ) {
 }
 
 function Fret( props: { index: number } ) {
-   
-
    return (
       <View style={styles.fret}>
          { ( [3, 5, 7, 9, 12, 15, 17, 19].includes( props.index ) )
@@ -90,7 +88,7 @@ export default function Guitar( ) {
 
          {/* Strings */}
          <View style={styles.stringWrapper}>
-            {[1, 2, 3, 4, 5, 6].map( ( stringNumber ) => {
+            {[1, 2, 3, 4, 5, 6].map( ( ) => {
                return (
                   <String width={ 8 } />
                )

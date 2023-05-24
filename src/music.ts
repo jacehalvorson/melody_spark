@@ -74,27 +74,8 @@ function getOpenStringNoteIndex( string: GuitarString ): number {
    }
 }
 
-function getNoteOffsetFromScaleDegree( scaleDegree: number ): number {
-   switch ( scaleDegree ) {
-      case 1:
-         return 0;
-      case 2:
-         return 2;
-      case 3:
-         return 4;
-      case 4:
-         return 5;
-      case 5:
-         return 7;
-      case 6:
-         return 9;
-      case 7:
-         return 11;
-      default:
-         throw new Error(`Invalid scale degree: ${scaleDegree}`);
-   }
-}
 
+/* ---------------------- Classes ------------------------ */
 export class Note {
    constructor( public guitarString: GuitarString, public fretNumber: number ) {
       // Set the private string variable
@@ -143,12 +124,11 @@ export class Note {
    // Returns a list of notes that are a given scale degree of this note.
    // Ex. The 5th of an open E string is a B, so this would return a list
    // of every B on the fretboard.
-   public getScaleDegreeNotes( scaleDegree: number ): Note[] {
+   public getScaleDegreeNotes( noteOffset: number ): Note[] {
       let scaleDegreeNotes: Note[] = [];
 
       // Find the note symbol of the scale degree
-      const noteOffset = getNoteOffsetFromScaleDegree( scaleDegree );
-      const targetNoteSymbol = ( this.symbol + noteOffset ) % numSymbols;
+      const targetNoteSymbol = ( this.symbol + noteOffset - 1 ) % numSymbols;
 
       // Check each string for notes with the target symbol
       for ( const guitarString in GuitarString ) {
@@ -173,13 +153,14 @@ export class Note {
    }
 
    // Returns a list of notes that are a given chord of this note.
-   // Ex. An E major chord (scale degrees 1, 3, and 5) finds all
-   // E, G#, and B notes on the fretboard.
+   // Ex. An E major chord (relative notes 1, 5, 8) finds all E, 
+   // G#, and B notes on the fretboard.
+   // Ex. An E minor chord would find relative notes 1, 4, and 8.
    public getChordNotes( chord: number[] ): Note[] {
       let chordNotes: Note[] = [];
 
-      chord.forEach( scaleDegree => {
-         chordNotes = chordNotes.concat( this.getScaleDegreeNotes( scaleDegree ) );
+      chord.forEach( relativeNote => {
+         chordNotes = chordNotes.concat( this.getScaleDegreeNotes( relativeNote ) );
       });
 
       return chordNotes;

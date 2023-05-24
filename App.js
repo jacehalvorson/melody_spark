@@ -3,10 +3,10 @@ import React from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 import Guitar from './src/components/guitar';
 import { GuitarString, Note } from './src/music';
+import { getChordNotesFromString } from './src/utils';
 
 export default function App() {
   const [ chord, setChord ] = React.useState( 'Em' );
-  const note = new Note( GuitarString.D, 7 );
 
   return (
     <View style={styles.container}>
@@ -14,11 +14,11 @@ export default function App() {
       <TextInput
         style={styles.input}
         placeholder='Em'
-        maxLength='2'
+        maxLength={2}
         onChangeText={ ( value ) => setChord( value ) } />
       <Guitar />
       <Text>
-        {/* {note.getChordNotes( [1, 3, 5] ).map( note => note.toString() ).join( '\n' )} */}
+        {getChordNotesFromString( 'D7' ).map( note => note.toString() ).join( '\n' )}
       </Text>
     </View>
   );

@@ -1,12 +1,12 @@
 import { Note, NoteSymbol, GuitarString, numSymbols } from './music';
 
-function getChordScaleDegreeNotes( chord: string ): Note[] {
+export function getChordNotesFromString( chord: string ): Note[] {
    if ( chord.length < 1 || chord.length > 5 ) {
       throw new Error(`Invalid chord: ${chord}`);
    }
 
    let baseNoteSymbol: NoteSymbol;
-   let chordScaleDegrees: number[] = [ 1 ];
+   let chordNoteOffsets: number[] = [ 1 ];
 
    // Find the base note of the chord
    switch ( chord[0] ) {
@@ -53,17 +53,17 @@ function getChordScaleDegreeNotes( chord: string ): Note[] {
    // Find the chord scale degrees
    if ( chord.length === 1 ) {
       // Major chord ex. 'A'
-      chordScaleDegrees = [ 1, 3, 5 ];
+      chordNoteOffsets = [ 1, 5, 8 ];
    }
    else {
       switch ( chord[1] ) {
          case 'm':
             // Minor chord ex. 'Am'
-            chordScaleDegrees = [ 1, 3, 5 ];
+            chordNoteOffsets = [ 1, 4, 8 ];
             break;
          case '7':
             // Dominant 7th chord ex. 'A7'
-            chordScaleDegrees = [ 1, 3, 5, 7 ];
+            chordNoteOffsets = [ 1, 5, 8, 11 ];
             break;
          default:
             throw new Error(`Invalid chord: ${chord}`);
@@ -72,5 +72,6 @@ function getChordScaleDegreeNotes( chord: string ): Note[] {
 
    // Find the notes of the chord
    const baseNote: Note = new Note( GuitarString.E, baseNoteSymbol % numSymbols );
-   return baseNote.getChordNotes( chordScaleDegrees );
+   const chordNotes = baseNote.getChordNotes( chordNoteOffsets );
+   return chordNotes;
 }
