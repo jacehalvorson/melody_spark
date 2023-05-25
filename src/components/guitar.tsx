@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'flex-start',
 
-      width: '75%',
+      width: '55%',
       height: '80%',
       backgroundColor: '#000000',
 
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      width: '87%',
+      width: '93%',
       height: '100%',
    },
 
@@ -84,15 +84,19 @@ const styles = StyleSheet.create({
    },
 });
 
-function String( ) {
+function String( props: { fretsDisplayed: boolean[] } ) {
    return (
       <>
          <View style={styles.string}>
             {/* Highlighted notes */}
             <View style={styles.noteWrapper}>
-               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].map( ( ) => {
+               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].map( ( fretIndex ) => {
+                  let additionalStyles = {};
+                  if ( !props.fretsDisplayed[ fretIndex ] ) {
+                     additionalStyles = { backgroundColor: 'transparent', borderColor: 'transparent' };
+                  }
                   return (
-                     <View style={styles.note}></View>
+                     <View style={Object.assign( {}, styles.note, additionalStyles )}></View>
                   );
                })}
             </View>
@@ -122,7 +126,7 @@ function Dot( ) {
    );
 }
 
-export default function Guitar( ) {   
+export default function Guitar( props: { notesDisplayed: boolean[][] } ) {   
    return (
       <View style={styles.guitar}>
          {/* Fretboard */}
@@ -134,9 +138,9 @@ export default function Guitar( ) {
 
          <View style={styles.stringWrapper}>
             {/* Strings */}
-            {[1, 2, 3, 4, 5, 6].map( ( ) => {
+            {[0, 1, 2, 3, 4, 5].map( ( stringIndex ) => {
                return (
-                  <String />
+                  <String fretsDisplayed={ props.notesDisplayed[ stringIndex ] } />
                )
             })}
 

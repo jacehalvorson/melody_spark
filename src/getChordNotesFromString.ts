@@ -1,8 +1,9 @@
-import { Note, NoteSymbol, GuitarString, numSymbols } from './music';
+import { NoteSymbol, GuitarString, numSymbols } from './music';
+import Note from './note';
 
 export function getChordNotesFromString( chord: string ): Note[] {
    if ( chord.length < 1 || chord.length > 5 ) {
-      throw new Error(`Invalid chord: ${chord}`);
+      return [];
    }
 
    let baseNoteSymbol: NoteSymbol;
@@ -47,7 +48,7 @@ export function getChordNotesFromString( chord: string ): Note[] {
          baseNoteSymbol = NoteSymbol.GSharp;
          break;
       default:
-         throw new Error(`Invalid chord: ${chord}`);
+         return [];
    }
 
    // Find the chord scale degrees
@@ -56,17 +57,28 @@ export function getChordNotesFromString( chord: string ): Note[] {
       chordNoteOffsets = [ 1, 5, 8 ];
    }
    else {
-      switch ( chord[1] ) {
+      // Match on the rest of the chord string for chord types
+      switch ( chord.substring( 1 ) ) {
          case 'm':
             // Minor chord ex. 'Am'
             chordNoteOffsets = [ 1, 4, 8 ];
             break;
          case '7':
+         case 'maj7':
             // Dominant 7th chord ex. 'A7'
             chordNoteOffsets = [ 1, 5, 8, 11 ];
             break;
+         case 'm7':
+            // Minor 7th chord ex. 'Am7'
+            chordNoteOffsets = [ 1, 4, 8, 11 ];
+            break;
+         case 'sus':
+         case 'sus4':
+            // Suspended 4th chord ex. 'Asus4'
+            chordNoteOffsets = [ 1, 6, 8 ];
+            break;
          default:
-            throw new Error(`Invalid chord: ${chord}`);
+            return [];
       }
    }
 
