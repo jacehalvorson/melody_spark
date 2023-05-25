@@ -1,4 +1,4 @@
-import { GuitarString, getOpenStringNoteSymbol, getOpenStringNoteIndex, minFretNumber, maxFretNumber, minNoteIndex, maxNoteIndex, numSymbols } from './music';
+import { GuitarString, getOpenStringNoteSymbol, getOpenStringNoteIndex, minFretNumber, maxFretNumber, minNoteIndex, maxNoteIndex, numSymbols, NoteSymbol } from './music';
 
 export default class Note {
    constructor( public guitarString: GuitarString, public fretNumber: number ) {
