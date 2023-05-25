@@ -2,24 +2,21 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 import Guitar from './src/components/guitar';
-import { GuitarString, Note } from './src/music';
-import { getChordNotesFromString } from './src/utils';
+import { GuitarString } from './src/music';
+import Note from './src/note';
+import { getChordNotesFromString } from './src/getChordNotesFromString';
 
 export default function App() {
   const [ chord, setChord ] = React.useState( 'Em' );
 
   return (
     <View style={styles.container}>
-      <Text>Backing track chord: {chord}</Text>
-      <TextInput
+      {/* <TextInput
         style={styles.input}
         placeholder='Em'
         maxLength={2}
-        onChangeText={ ( value ) => setChord( value ) } />
+        onChangeText={ ( value ) => setChord( value ) } /> */}
       <Guitar />
-      <Text>
-        {getChordNotesFromString( 'D7' ).map( note => note.toString() ).join( '\n' )}
-      </Text>
     </View>
   );
 }
