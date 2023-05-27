@@ -7,7 +7,7 @@ export default class NoteMap {
       this.reset( );
    }
 
-   public getNoteMap( ): boolean[][] {
+   public getNoteMap( ): (Note|null)[][] {
       return this.noteMap;
    }
 
@@ -20,14 +20,14 @@ export default class NoteMap {
 
          this.noteMap[ guitarString ] = [];
          for ( let fret = 0; fret <= maxFretNumber; fret++ ) {
-            this.noteMap[ guitarString ][ fret ] = false;
+            this.noteMap[ guitarString ][ fret ] = null;
          }
       }
    }
 
    public update( notes: Note[ ] ) {
       for ( const note of notes ) {
-         this.noteMap[ note.getString( ) ][ note.getFret( ) ] = true;
+         this.noteMap[ note.getString( ) ][ note.getFret( ) ] = note;
       }
    }
 
@@ -48,5 +48,5 @@ export default class NoteMap {
       return noteMapString;
    }
       
-   private noteMap: boolean[][];
+   private noteMap: (Note|null)[][];
 }

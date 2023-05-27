@@ -1,4 +1,6 @@
 import { StyleSheet, View, Text } from 'react-native';
+import Note from '../note';
+import { NoteSymbol } from '../music';
 
 const styles = StyleSheet.create({
    guitar: {
@@ -44,7 +46,7 @@ const styles = StyleSheet.create({
 
    noteWrapper: {
       position: 'absolute',
-      left: -6,
+      left: -10,
       height: '100%',
       display: 'flex',
       alignItems: 'center',
@@ -53,12 +55,17 @@ const styles = StyleSheet.create({
 
    note: {
       position: 'relative',
-      backgroundColor: 'red',
-      width: 17,
-      height: 17,
-      borderRadius: 8,
+      backgroundColor: '#627ABF',
+      width: 25,
+      height: 25,
+      borderRadius: 12,
       borderWidth: 1,
       borderColor: '#000000',
+
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      color: 'white',
    },
 
    stringWrapper: {
@@ -84,7 +91,7 @@ const styles = StyleSheet.create({
    },
 });
 
-function String( props: { fretsDisplayed: boolean[] } ) {
+function String( props: { fretsDisplayed: Note[] } ) {
    return (
       <>
          <View style={styles.string}>
@@ -96,7 +103,14 @@ function String( props: { fretsDisplayed: boolean[] } ) {
                      additionalStyles = { backgroundColor: 'transparent', borderColor: 'transparent' };
                   }
                   return (
-                     <View style={Object.assign( {}, styles.note, additionalStyles )}></View>
+                     <View style={Object.assign( {}, styles.note, additionalStyles )}>
+                        {( props.fretsDisplayed[ fretIndex ] )
+                              ? <Text style={{color: 'white'}}>
+                                    {NoteSymbol[ props.fretsDisplayed[ fretIndex ].getSymbol( ) ].replace( 'Sharp', '#' )}
+                                 </Text>
+                              : <></>
+                        }
+                     </View>
                   );
                })}
             </View>
@@ -126,7 +140,7 @@ function Dot( ) {
    );
 }
 
-export default function Guitar( props: { notesDisplayed: boolean[][] } ) {   
+export default function Guitar( props: { notesDisplayed: Note[][] } ) {   
    return (
       <View style={styles.guitar}>
          {/* Fretboard */}
