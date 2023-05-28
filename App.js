@@ -5,12 +5,17 @@ import Guitar from './src/components/guitar';
 import { GuitarString } from './src/music';
 import Note from './src/note';
 import NoteMap from './src/noteMap';
-import { getChordNotesFromString } from './src/getChordNotesFromString';
+import getNotes from './src/getChordNotesFromString';
 
-export default function App() {
-  const [ chord, setChord ] = React.useState( 'Em' );
-  let highlightedNotes = new NoteMap( );
-  highlightedNotes.update( getChordNotesFromString( chord ) );
+const highlightedNotes = new NoteMap( );
+const scaleNotes = new NoteMap( );
+
+export default function App( ) {
+  const [ chord, setChord ] = React.useState( 'A' );
+  const [ key, setKey ] = React.useState( 'E' );
+
+  highlightedNotes.update( getNotes( chord ) );
+  scaleNotes.update( getNotes( 'Epentatonic' ) );
 
   return (
     <View style={styles.container}>
@@ -18,8 +23,9 @@ export default function App() {
         style={styles.input}
         placeholder='Em'
         maxLength={5}
-        onChangeText={ ( value ) => { setChord( value ); highlightedNotes.reset( ) } } />
-      <Guitar notesDisplayed={highlightedNotes.getNoteMap( )} />
+        onChangeText={ ( value ) => { setChord( value ); highlightedNotes.reset( ); scaleNotes.reset( ) } } />
+        <Guitar notesDisplayed={highlightedNotes.getNoteMap( )}
+                scaleNotes={scaleNotes.getNoteMap( )} />
     </View>
   );
 }

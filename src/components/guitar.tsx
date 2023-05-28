@@ -1,6 +1,7 @@
 import { StyleSheet, View, Text } from 'react-native';
 import Note from '../note';
 import { NoteSymbol } from '../music';
+import NoteMap from '../noteMap';
 
 const styles = StyleSheet.create({
    guitar: {
@@ -91,31 +92,39 @@ const styles = StyleSheet.create({
    },
 });
 
-function String( props: { fretsDisplayed: Note[] } ) {
+function String( props: { fretsHighlighted: (Note|null)[], scaleFrets: (Note|null)[] } ) {
    return (
-      <>
-         <View style={styles.string}>
-            {/* Highlighted notes */}
-            <View style={styles.noteWrapper}>
-               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].map( ( fretIndex ) => {
-                  let additionalStyles = {};
-                  if ( !props.fretsDisplayed[ fretIndex ] ) {
-                     additionalStyles = { backgroundColor: 'transparent', borderColor: 'transparent' };
-                  }
-                  return (
-                     <View style={Object.assign( {}, styles.note, additionalStyles )}>
-                        {( props.fretsDisplayed[ fretIndex ] )
-                              ? <Text style={{color: 'white'}}>
-                                    {NoteSymbol[ props.fretsDisplayed[ fretIndex ].getSymbol( ) ].replace( 'Sharp', '#' )}
-                                 </Text>
-                              : <></>
-                        }
-                     </View>
-                  );
-               })}
-            </View>
+      <View style={styles.string}>
+         {/* Highlighted notes */}
+         <View style={styles.noteWrapper}>
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].map( ( fretIndex ) => {
+               const highlightedFret = props.fretsHighlighted[ fretIndex ];
+               const scaleFret = props.scaleFrets[ fretIndex ];
+               let additionalStyles = {};
+               let symbol = '';
+               
+               if ( highlightedFret !== null ) {
+                  symbol = NoteSymbol[ highlightedFret.getSymbol( ) ].replace( 'Sharp', '#' );
+                  additionalStyles = { opacity: 1 };
+               }
+               else if ( scaleFret !== null ) {
+                  symbol = NoteSymbol[ scaleFret.getSymbol( ) ].replace( 'Sharp', '#' );
+                  additionalStyles = { opacity: 0.5 };
+               }
+               else {
+                  additionalStyles = { opacity: 0 };
+               }
+
+               return (
+                  <View style={Object.assign( {}, styles.note, additionalStyles )}>
+                     <Text style={{color: 'white'}}>
+                        {symbol}
+                     </Text>
+                  </View>
+               );
+            })}
          </View>
-      </>
+      </View>
    );
 }
 
@@ -140,7 +149,7 @@ function Dot( ) {
    );
 }
 
-export default function Guitar( props: { notesDisplayed: Note[][] } ) {   
+export default function Guitar( props: { notesDisplayed: (Note|null)[][], scaleNotes: (Note|null)[][] } ) {
    return (
       <View style={styles.guitar}>
          {/* Fretboard */}
@@ -150,11 +159,14 @@ export default function Guitar( props: { notesDisplayed: Note[][] } ) {
             );
          })}
 
+
+
          <View style={styles.stringWrapper}>
             {/* Strings */}
             {[0, 1, 2, 3, 4, 5].map( ( stringIndex ) => {
                return (
-                  <String fretsDisplayed={ props.notesDisplayed[ stringIndex ] } />
+                  <String fretsHighlighted={ props.notesDisplayed[ stringIndex ] }
+                           scaleFrets={ props.scaleNotes[ stringIndex ] } />
                )
             })}
 
