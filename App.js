@@ -21,11 +21,16 @@ export default function App( ) {
     <View style={styles.container}>
       <TextInput
         style={styles.input}
-        placeholder='Em'
-        maxLength={5}
+        placeholder='Key'
+        maxLength={2}
+        onChangeText={ ( value ) => { setKey( value ); highlightedNotes.reset( ); scaleNotes.reset( ) } } />
+      <TextInput
+        style={styles.input}
+        placeholder='Chord progression'
+        maxLength={12}
         onChangeText={ ( value ) => { setChord( value ); highlightedNotes.reset( ); scaleNotes.reset( ) } } />
-        <Guitar notesDisplayed={highlightedNotes.getNoteMap( )}
-                scaleNotes={scaleNotes.getNoteMap( )} />
+      <Guitar notesDisplayed={highlightedNotes.getNoteMap( )}
+              scaleNotes={scaleNotes.getNoteMap( )} />
     </View>
   );
 }
