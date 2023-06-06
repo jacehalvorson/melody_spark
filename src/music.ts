@@ -73,3 +73,39 @@ export function getOpenStringNoteIndex( string: GuitarString ): number {
          throw new Error(`Invalid string: ${string}`);
    }
 }
+
+export function getOffsetNoteSymbol( baseNote: NoteSymbol, noteOffset: number ): NoteSymbol {
+   return ( baseNote + noteOffset - 1 ) % numSymbols;
+}
+
+export function getNoteSymbolFromString( chordString: string ): NoteSymbol {
+   let noteSymbol: NoteSymbol = NoteSymbol.E;
+   
+   switch ( chordString ) {
+      case 'A':
+         noteSymbol = NoteSymbol.A;
+         break;
+      case 'B':
+         noteSymbol = NoteSymbol.B;
+         break;
+      case 'C':
+         noteSymbol = NoteSymbol.C;
+         break;
+      case 'D':
+         noteSymbol = NoteSymbol.D;
+         break;
+      case 'E':
+         noteSymbol = NoteSymbol.E;
+         break;
+      case 'F':
+         noteSymbol = NoteSymbol.F;
+         break;
+      case 'G':
+         noteSymbol = NoteSymbol.G;
+         break;
+      default:
+         console.log( `Invalid chord string: ${chordString}` );
+   }
+
+   return noteSymbol;
+}

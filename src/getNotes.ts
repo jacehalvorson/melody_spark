@@ -1,4 +1,4 @@
-import { NoteSymbol, GuitarString, numSymbols } from './music';
+import { NoteSymbol, GuitarString, numSymbols, getNoteSymbolFromString } from './music';
 import Note from './note';
 
 export default function getNotes( chord: string ): Note[] {
@@ -9,32 +9,8 @@ export default function getNotes( chord: string ): Note[] {
    let baseNoteSymbol: NoteSymbol;
    let chordNoteOffsets: number[] = [ 1 ];
 
-   // Find the base note of the chord
-   switch ( chord[0] ) {
-      case 'A':
-         baseNoteSymbol = NoteSymbol.A;
-         break;
-      case 'B':
-         baseNoteSymbol = NoteSymbol.B;
-         break;
-      case 'C':
-         baseNoteSymbol = NoteSymbol.C;
-         break;
-      case 'D':
-         baseNoteSymbol = NoteSymbol.D;
-         break;
-      case 'E':
-         baseNoteSymbol = NoteSymbol.E;
-         break;
-      case 'F':
-         baseNoteSymbol = NoteSymbol.F;
-         break;
-      case 'G':
-         baseNoteSymbol = NoteSymbol.G;
-         break;
-      default:
-         return [];
-   }
+   // Find the base note (e.g. A, B, C, etc.)
+   baseNoteSymbol = getNoteSymbolFromString( chord[0] )
 
    // Find the chord scale degrees
    // Check for sharp and flat symbols
@@ -71,9 +47,9 @@ export default function getNotes( chord: string ): Note[] {
          // Suspended 4th chord ex. 'Asus4'
          chordNoteOffsets = [ 1, 6, 8 ];
          break;
-      case 'pentatonic':
+      case 'scale':
          // Pentatonic scale ex. 'Apentatonic'
-         chordNoteOffsets = [ 1, 3, 5, 8, 10 ];
+         chordNoteOffsets = [ 1, 3, 5, 8, 10, 12. ];
          break;
       case '':
          // Major chord ex. 'A'
