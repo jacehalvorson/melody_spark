@@ -1,19 +1,22 @@
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, ScrollView } from 'react-native';
 import Note from '../note';
 import { NoteSymbol } from '../music';
 import NoteMap from '../noteMap';
 
 const styles = StyleSheet.create({
-   guitar: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'flex-start',
-
-      width: '55%',
+   guitarContainer: {
+      width: '65%',
       height: '80%',
+      overflow: 'scroll',
+   },
+   
+   guitar: {
+      position: 'relative',
+      flexGrow: 1,
+      height: '200%',
+      alignItems: 'center',
+      justifyContent: 'space-evenly',
       backgroundColor: '#000000',
-
       borderTopColor: '#ffffff',
       borderTopWidth: 3,
       borderRadius: 10,
@@ -26,8 +29,14 @@ const styles = StyleSheet.create({
       borderBottomWidth: 3,
       borderColor: '#c2c1c4',
       borderRadius: 4,
+   },
 
-      display: 'flex',
+   dotWrapper: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
       alignItems: 'center',
       justifyContent: 'center',
    },
@@ -42,14 +51,14 @@ const styles = StyleSheet.create({
    fretNumber: {
       position: 'absolute',
       top: '30%',
-      left: -20,
+      left: -10,
    },
 
    noteWrapper: {
       position: 'absolute',
       left: -10,
       height: '100%',
-      display: 'flex',
+      flex: 1,
       alignItems: 'center',
       justifyContent: 'space-around',
    },
@@ -97,7 +106,7 @@ function String( props: { fretsHighlighted: (Note|null)[], scaleFrets: (Note|nul
       <View style={styles.string}>
          {/* Highlighted notes */}
          <View style={styles.noteWrapper}>
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].map( ( fretIndex ) => {
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22].map( ( fretIndex, index ) => {
                const highlightedFret = props.fretsHighlighted[ fretIndex ];
                const scaleFret = props.scaleFrets[ fretIndex ];
                let additionalStyles = {};
@@ -116,7 +125,7 @@ function String( props: { fretsHighlighted: (Note|null)[], scaleFrets: (Note|nul
                }
 
                return (
-                  <View style={Object.assign( {}, styles.note, additionalStyles )}>
+                  <View key={ index } style={Object.assign( {}, styles.note, additionalStyles )}>
                      <Text style={{color: 'white'}}>
                         {symbol}
                      </Text>
@@ -145,32 +154,37 @@ function Fret( props: { index: number } ) {
 
 function Dot( ) {
    return (
-      <View style={styles.dot}></View>
+      <View style={styles.dotWrapper}>
+         <View style={styles.dot} />
+      </View>
    );
 }
 
 export default function Guitar( props: { notesDisplayed: (Note|null)[][], scaleNotes: (Note|null)[][] } ) {
    return (
-      <View style={styles.guitar}>
-         {/* Fretboard */}
-         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].map( ( fret ) => {
-            return (
-               <Fret index={fret} />
-            );
-         })}
-
-
-
-         <View style={styles.stringWrapper}>
-            {/* Strings */}
-            {[0, 1, 2, 3, 4, 5].map( ( stringIndex ) => {
+      <View style={styles.guitarContainer}>
+         <ScrollView contentContainerStyle={styles.guitar}>
+            {/* Fretboard */}
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22].map( ( fret, index ) => {
                return (
-                  <String fretsHighlighted={ props.notesDisplayed[ stringIndex ] }
-                           scaleFrets={ props.scaleNotes[ stringIndex ] } />
-               )
+                  <Fret key={ index } index={fret} />
+               );
             })}
 
-         </View>
+
+
+            <View style={styles.stringWrapper}>
+               {/* Strings */}
+               {[0, 1, 2, 3, 4, 5].map( ( stringIndex, index ) => {
+                  return (
+                     <String key={ index }
+                              fretsHighlighted={ props.notesDisplayed[ stringIndex ] }
+                              scaleFrets={ props.scaleNotes[ stringIndex ] } />
+                  )
+               })}
+
+            </View>
+         </ScrollView>
       </View>
    );
 }

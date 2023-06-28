@@ -6,11 +6,14 @@ export default function getNotes( chord: string ): Note[] {
       return [];
    }
 
-   let baseNoteSymbol: NoteSymbol;
+   let baseNoteSymbol: ( NoteSymbol | null );
    let chordNoteOffsets: number[] = [ 1 ];
 
    // Find the base note (e.g. A, B, C, etc.)
    baseNoteSymbol = getNoteSymbolFromString( chord[0] )
+   if ( baseNoteSymbol === null ) {
+      return [];
+   }
 
    // Find the chord scale degrees
    // Check for sharp and flat symbols
@@ -48,8 +51,8 @@ export default function getNotes( chord: string ): Note[] {
          chordNoteOffsets = [ 1, 6, 8 ];
          break;
       case 'scale':
-         // Pentatonic scale ex. 'Apentatonic'
-         chordNoteOffsets = [ 1, 3, 5, 8, 10, 12. ];
+         // Full scale ex. 'Ascale'
+         chordNoteOffsets = [ 1, 3, 5, 6, 8, 10, 12 ];
          break;
       case '':
          // Major chord ex. 'A'

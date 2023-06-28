@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, TextInput, View, Pressable } from 'react-native';
+import { StyleSheet, Text, TextInput, View, ScrollView, Pressable } from 'react-native';
 import Guitar from './src/components/guitar';
 import { getOffsetNoteSymbol, getNoteSymbolFromString, NoteSymbol } from './src/music';
 import NoteMap from './src/noteMap';
@@ -11,10 +11,13 @@ const scaleNotes = new NoteMap( );
 
 function getChordFromKeyAndOffset( key, offset ) {
   let chord = NoteSymbol[ getOffsetNoteSymbol( getNoteSymbolFromString( key ), offset ) ].replace( 'Sharp', '#' );
-  if ( offset === 1 || offset === 6 || offset === 8 ) {
-    return chord;
-  }
-  return chord.concat( 'm' );
+
+  // Add an 'm' if necessary
+  chord = ( ( offset === 1 || offset === 6 || offset === 8 )
+                ? chord // Major
+                : chord.concat( 'm' ) ) ;// Minor
+
+  return chord;
 }
 
 export default function App( ) {
@@ -23,9 +26,16 @@ export default function App( ) {
   const [ activeChordButton, setActiveChordButton ] = React.useState( -1 );
 
   React.useEffect( ( ) => {
-    scaleNotes.reset( );
-    highlightedNotes.reset( );
-    scaleNotes.update( getNotes( key.concat( 'scale' ) ) );
+    const timeoutId = setTimeout( ( ) => {
+      highlightedNotes.reset( );
+      setActiveChordButton( -1 );
+
+      scaleNotes.reset( );
+      scaleNotes.update( getNotes( `${key}scale` ) );
+      console.log( "Updating scale notes" );
+    }, 2000 );
+
+    return ( ) => clearTimeout( timeoutId );
   }, [ key ] );
   
   return (
@@ -35,7 +45,11 @@ export default function App( ) {
         style={styles.input}
         placeholder='Key'
         maxLength={2}
-        onChangeText={ ( value ) => { setKey( value ); } }
+        onChangeText={ ( value ) => {
+          if ( getNoteSymbolFromString( value ) !== null ) {
+            setKey( value );
+          }
+        }}
       />
 
       <View style={styles.chordsWrapper}>
@@ -44,6 +58,7 @@ export default function App( ) {
 
           return (
             <Pressable
+              key={ index }
               style={ [ styles.chord, ( activeChordButton === index ) && { backgroundColor: '#909090' } ] }
               onPress={ ( ) => {
                 highlightedNotes.reset( );
@@ -74,8 +89,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+
+    display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
   },
 
   input: {

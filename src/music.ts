@@ -33,7 +33,7 @@ export const maxNoteIndex = (numSymbols * 3) + NoteSymbol.D; // D on the 22nd fr
 
 // Bounds on fret numbers are based on my guitar
 export const minFretNumber = 0; // open string
-export const maxFretNumber = 15; // 22nd fret
+export const maxFretNumber = 22; // 22nd fret
 
 /* ---------------------- Helper functions ------------------------ */
 export function getOpenStringNoteSymbol( string: GuitarString ): NoteSymbol {
@@ -78,8 +78,8 @@ export function getOffsetNoteSymbol( baseNote: NoteSymbol, noteOffset: number ):
    return ( baseNote + noteOffset - 1 ) % numSymbols;
 }
 
-export function getNoteSymbolFromString( chordString: string ): NoteSymbol {
-   let noteSymbol: NoteSymbol = NoteSymbol.E;
+export function getNoteSymbolFromString( chordString: string ): ( NoteSymbol | null ) {
+   let noteSymbol: ( NoteSymbol | null ) = NoteSymbol.E;
    
    switch ( chordString ) {
       case 'A':
@@ -104,7 +104,8 @@ export function getNoteSymbolFromString( chordString: string ): NoteSymbol {
          noteSymbol = NoteSymbol.G;
          break;
       default:
-         console.log( `Invalid chord string: ${chordString}` );
+         // Indication of an invalid string note
+         noteSymbol = null;
    }
 
    return noteSymbol;
