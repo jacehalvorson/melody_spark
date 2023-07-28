@@ -1,7 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, TextInput, View, ScrollView, Pressable } from 'react-native';
+import { StyleSheet, Text, TextInput, View, Pressable } from 'react-native';
 import Guitar from './src/components/guitar';
+import BackingTrack from './src/components/backingTrack';
 import { getOffsetNoteSymbol, getNoteSymbolFromString, NoteSymbol } from './src/music';
 import NoteMap from './src/noteMap';
 import getNotes from './src/getNotes';
@@ -15,7 +16,7 @@ function getChordFromKeyAndOffset( key, offset ) {
   // Add an 'm' if necessary
   chord = ( ( offset === 1 || offset === 6 || offset === 8 )
                 ? chord // Major
-                : chord.concat( 'm' ) ) ;// Minor
+                : chord.concat( 'm' ) ); // Minor
 
   return chord;
 }
@@ -24,19 +25,36 @@ export default function App( ) {
   const [ chord, setChord ] = React.useState( 'A' );
   const [ key, setKey ] = React.useState( 'E' );
   const [ activeChordButton, setActiveChordButton ] = React.useState( -1 );
+  const [ scaleNoteMap, setScaleNoteMap ] = React.useState( scaleNotes.getNoteMap( ) );
+  const [ highlightedNoteMap, setHighlightedNoteMap ] = React.useState( highlightedNotes.getNoteMap( ) );
 
+  // Triggered when user changes key, slight delay to allow typing fully
   React.useEffect( ( ) => {
     const timeoutId = setTimeout( ( ) => {
-      highlightedNotes.reset( );
       setActiveChordButton( -1 );
 
       scaleNotes.reset( );
       scaleNotes.update( getNotes( `${key}scale` ) );
-      console.log( "Updating scale notes" );
-    }, 2000 );
+      setScaleNoteMap( scaleNotes.getNoteMap( ) );
+    }, 500 );
 
     return ( ) => clearTimeout( timeoutId );
   }, [ key ] );
+  
+  // Triggered any time a chord changes
+  React.useEffect( ( ) => {
+    const offsetArray = [ 1, 3, 5, 6, 8, 10, 12 ];
+    console.log( `Active chord button ${activeChordButton}` );
+
+    highlightedNotes.reset( );
+    if ( activeChordButton != -1 ) {
+      const newChord = getChordFromKeyAndOffset( key, offsetArray[ activeChordButton ] );
+      setChord( newChord );
+      highlightedNotes.update( getNotes( newChord ) );
+    }
+
+    setHighlightedNoteMap( highlightedNotes.getNoteMap( ) );
+  }, [ activeChordButton ] );
   
   return (
     <View style={styles.container}>
@@ -51,7 +69,6 @@ export default function App( ) {
           }
         }}
       />
-
       <View style={styles.chordsWrapper}>
         {[ 1, 3, 5, 6, 8, 10, 12 ].map( ( offset, index ) => {
           const chord = getChordFromKeyAndOffset( key, offset );
@@ -61,15 +78,11 @@ export default function App( ) {
               key={ index }
               style={ [ styles.chord, ( activeChordButton === index ) && { backgroundColor: '#909090' } ] }
               onPress={ ( ) => {
-                highlightedNotes.reset( );
                 if ( activeChordButton === index ) {
                   setActiveChordButton( -1 );
-                  setChord( '' );
                 }
                 else {
                   setActiveChordButton( index );
-                  setChord( chord );
-                  highlightedNotes.update( getNotes( chord ) );
                 }
               }}
             >
@@ -78,9 +91,9 @@ export default function App( ) {
           );
         })}
       </View>
-
-      <Guitar notesDisplayed={highlightedNotes.getNoteMap( )}
-              scaleNotes={scaleNotes.getNoteMap( )} />
+      <BackingTrack />
+      <Guitar notesDisplayed={highlightedNoteMap}
+              scaleNotes={scaleNoteMap} />
     </View>
   );
 }
@@ -102,6 +115,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     margin: 10,
+    marginTop: 50,
   },
 
   chordsWrapper: {
